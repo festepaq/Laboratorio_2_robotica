@@ -3,7 +3,7 @@
 clc, clear all; close all;
 
 L1=0.265; L2=0.444; L3=0.110; L4=0.470; L5=0.080; L6=0.101;
-pos_dada = [0.4 -0.5 0.6]; % Pos. Final Pedida
+pos_dada = [0.4 0.5 0.6]; % Pos. Final Pedida
 ori_dada = [-120 35 -75]; % Ori. Final Pedida
 
 q1 = atan2(pos_dada(2),pos_dada(1));
