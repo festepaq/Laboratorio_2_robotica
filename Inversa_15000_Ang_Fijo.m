@@ -1,17 +1,30 @@
 
-%% Pruebas
+%% Cinemática inversa con q4 fijo
 clc, clear all; close all;
 
 L1=0.265; L2=0.444; L3=0.110; L4=0.470; L5=0.080; L6=0.101;
-pos_dada = [0.4 0.5 0.6]; % Pos. Final Pedida
-ori_dada = [-120 35 -75]; % Ori. Final Pedida
+pos_dada = [0.522 0.522 0.864]; % Pos. Final Pedida
+ori_dada = [-30.326 26.760 -44.822]*pi/180; % Ori. Final Pedida
+% pos_dada = [0.498 0.7733 0.234]; % Pos. Final Pedida
+% ori_dada = [178.103 -1.289 -55.821]*pi/180; % Ori. Final Pedida
+% pos_dada = [0.744 0.379 0.680]; % Pos. Final Pedida
+% ori_dada = [-154.184 40.52 46.130]*pi/180; % Ori. Final Pedida
 
 q1 = atan2(pos_dada(2),pos_dada(1));
 
-% T_06 = transl(pos_dada)*rpy2tr(ori_dada);
+T_06 = transl(pos_dada)*rpy2tr(ori_dada);
+m = (T_06*[0 0 1 1]')';
+m(:,4) = [];
+P = m-pos_dada;
+phi_1 = atan2(P(3),sqrt(P(1)^2+P(2)^2));
+%phi_1 = acos(-0.9992);
+f = atan2(L5,L6);
+h= phi_1+f;
+P_65 = [cos(q1)*(cos(h)*sqrt(L5^2+L6^2)) sin(q1)*(cos(h)*sqrt(L5^2+L6^2)) sin(h)*sqrt(L5^2+L6^2)]; %P_65 = [-L5 0 -L6]; 
+P_05 = pos_dada-P_65;
 P_01 = [0 0 L1]; P_06 = pos_dada;
-P_65 = [-cos(q1)*L6 -sin(q1)*L6 -L5]; %P_65 = [-L5 0 -L6]; 
-P_05 = P_06+P_65; %P_05 = (T_06*[P_65 1]')';
+% 
+% P_05 = P_06+P_65; %P_05 = (T_06*[P_65 1]')';
 %P_05(:,4) = [];
 P_15 = P_05-P_01;
 a = P_15(1); b = P_15(2); c = P_15(3); 
@@ -24,7 +37,11 @@ beta = atan2(c,sqrt(a^2+b^2));
 gamma = acos((L2^2-L3^2-L4^2+a^2+b^2+c^2)/(2*L2*sqrt(a^2+b^2+c^2)));
 q2 = pi/2-beta-gamma;
 
-q5 = -(q2+q3);
+P_56_a = [cos(q1)*L6 sin(q1)*L6 L5];
+ang_0 = atan2(P_65(3),sqrt(P_65(1)^2+P_65(2)^2));
+ang_1 = atan2(P_56_a(3),sqrt(P_56_a(1)^2+P_56_a(2)^2));
+
+q5 = -q2-q3+ang_1-ang_0;
 
 L(1) = Link('revolute','alpha', 0,    'a', 0,   'd',L1,   'offset', 0,   'modified', 'qlim',[-pi pi]);
 L(2) = Link('revolute','alpha', -pi/2,    'a', 0,   'd',0,   'offset', -pi/2,   'modified', 'qlim',[-pi pi]);
@@ -36,11 +53,25 @@ L(6) = Link('revolute','alpha', -pi/2,    'a', L5,   'd',L6,   'offset', 0,   'm
 plot_options = {'workspace',[-10 10 -10 10 -10 10],'scale',0.05, 'view',[130 20]};
 Robot_ABB = SerialLink(L,'name','ABB CRB 15000','plotopt',plot_options);
 
+T_01 = L(1).A(q1);
+T_12 = L(2).A(q2);
+T_23 = L(3).A(q3);
+T_34 = L(4).A(0);
+T_45 = L(5).A(q5);
+q6 = 0;
+T_56 = L(6).A(q6);
+T_06 = T_01*T_12*T_23*T_34*T_45*T_56;
+RPY = tr2rpy(T_06);
+q6 = -RPY(3)+ori_dada(3);
+
 figure(1);
 hold on;
 trplot(eye(4), 'width',2,'arrow');
 axis([-1 1 -1 1 -1 1.5]);
-Robot_ABB.teach([q1 q2 q3 0 q5 0]);
+Robot_ABB.teach([q1 q2 q3 0 q5 q6]);
+%Robot_ABB.teach([45 36.8 -37.3 0 -49.9 0]*pi/180);
+%Robot_ABB.teach([0 0 0 0 0 0]);
+
 arrow3([0,0,0],[0 0 L1],'5',0);
 
 %plot3(P_06(1),P_06(2),P_06(3));
