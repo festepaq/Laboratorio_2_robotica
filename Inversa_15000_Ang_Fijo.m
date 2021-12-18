@@ -17,15 +17,11 @@ m = (T_06*[0 0 1 1]')';
 m(:,4) = [];
 P = m-pos_dada;
 phi_1 = atan2(P(3),sqrt(P(1)^2+P(2)^2));
-%phi_1 = acos(-0.9992);
 f = atan2(L5,L6);
 h= phi_1+f;
 P_65 = [cos(q1)*(cos(h)*sqrt(L5^2+L6^2)) sin(q1)*(cos(h)*sqrt(L5^2+L6^2)) sin(h)*sqrt(L5^2+L6^2)]; %P_65 = [-L5 0 -L6]; 
 P_05 = pos_dada-P_65;
 P_01 = [0 0 L1]; P_06 = pos_dada;
-% 
-% P_05 = P_06+P_65; %P_05 = (T_06*[P_65 1]')';
-%P_05(:,4) = [];
 P_15 = P_05-P_01;
 a = P_15(1); b = P_15(2); c = P_15(3); 
 
