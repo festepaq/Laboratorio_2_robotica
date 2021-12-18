@@ -796,28 +796,6 @@ Q6 = -RPY(3)+ori_dada(3);
            axis(app.grafica,[-1 1 -1 1 -0.67 1.3]);
            hold(app.grafica,'off');
 
-%            app.info_q1.Value = round(q_1*180/pi,2);
-%            app.info_q2.Value = round(q_2*180/pi,2);
-%            app.info_q3.Value = round(q_3*180/pi,2);
-%            app.info_q4.Value = round(q_4*180/pi,2);
-%            app.info_q5.Value = round(q_5*180/pi,2);
-%            app.info_q6.Value = round(q_6*180/pi,2);
-%            app.posX.Value = round(translation(1)*1000,2);
-%            app.posY.Value = round(translation(2)*1000,2);
-%            app.posZ.Value = round(translation(3)*1000,2);
-
-%            T_01 = L(1).A(q_1);
-%            T_12 = L(2).A(q_2);
-%            T_23 = L(3).A(q_3);
-%            T_34 = L(4).A(q_4);
-%            T_45 = L(5).A(q_5);
-%            T_56 = L(6).A(q_6);
-%            T_06 = T_01*T_12*T_23*T_34*T_45*T_56;
-%            RPY = tr2rpy(T_06);           
-%            app.roll.Value = RPY(1)*180/pi;
-%            app.pitch.Value = RPY(2)*180/pi;
-%            app.yaw.Value = RPY(3)*180/pi;
-
 
         end
 
